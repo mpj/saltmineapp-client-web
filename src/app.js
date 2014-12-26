@@ -13,9 +13,7 @@ function app(opts, facade) {
 
    function render() {
     facade.render({
-      generatedPasswordValue: state.view.generatedPassword,
-      username: state.view.username,
-      masterPassword: state.view.masterPassword
+      generatedPasswordValue: state.view.generatedPassword
     })
   }
   return {
@@ -34,6 +32,17 @@ function app(opts, facade) {
         render();
       });
       render();
+    },
+    viewQueriedDomains: function(query, callback) {
+      if (!query.length || query.length < 3 || !state.view.username || !state.view.masterPassword) return callback([]);
+      facade.queryDomains(query, state.view.username, state.view.masterPassword, function(error, result) {
+        if (error) {
+          console.warn(error);
+        } else {
+          callback(result);
+        }
+      });
+
     },
     init: function() {
       render();

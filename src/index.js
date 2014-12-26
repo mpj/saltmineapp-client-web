@@ -4,7 +4,6 @@ typeof window !== "undefined" && (window.React = React)
 var App = require('./app');
 var crypto = require('crypto');
 
-
 var facade = {}
 
 var MainView = React.createClass({
@@ -58,31 +57,7 @@ facade.render = function(viewModel) {
     })
   }
   var selectizeInstance = $('#domain_name')[0] && $('#domain_name')[0].selectize;
-  selectizeInstance.settings.load = function(query, callback) {
-    if (!query.length || query.length < 3 || !viewModel.username || !viewModel.masterPassword) return callback([]);
-    $.ajax({
-      url: 'http://localhost:5000/command',
-      type: 'POST',
-      contentType: "application/json",
-      data: JSON.stringify({
-        command: 'query-domains',
-        query: query,
-        username: viewModel.username,
-        masterPassword: viewModel.masterPassword
-      }),
-      error: function(error) {
-        console.warn("Command error", error);
-      },
-      success: function(res) {
-        callback(res.map(function(obj) {
-          return {
-            text: obj.domainName,
-            value: obj.domainName
-          }
-        }))
-      }
-    });
-  };
+  selectizeInstance.settings.load = app.viewQueriedDomains;
 }
 
 facade.remoteServiceCommand = function(data, callback) {
@@ -94,6 +69,26 @@ facade.remoteServiceCommand = function(data, callback) {
     data: JSON.stringify(data),
     error: function(error) { callback(error, null) },
     success: function(result) { callback(null, result) }
+  })
+}
+
+facade.queryDomains = function(query, username, masterPassword, callback) {
+  facade.remoteServiceCommand({
+    command: 'query-domains',
+    query: query,
+    username: username,
+    masterPassword: masterPassword
+  }, function(error, result) {
+    if (error) {
+      callback(error);
+    } else {
+      callback(null, result.map(function(obj) {
+        return {
+          text: obj.domainName,
+          value: obj.domainName
+        }
+      }))
+    }
   })
 }
 
