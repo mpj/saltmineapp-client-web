@@ -72,7 +72,7 @@ facade.render = function(viewModel) {
   }
   var selectizeInstance = $('#domain_name')[0] && $('#domain_name')[0].selectize;
   selectizeInstance.settings.load = function(query, callback) {
-    if (!query.length) return callback();
+    if (!query.length || query.length < 3 || !viewModel.username || !viewModel.masterPassword) return callback([]);
     $.ajax({
       url: 'http://localhost:5000/domains',
       type: 'POST',
