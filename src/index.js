@@ -61,16 +61,17 @@ facade.render = function(viewModel) {
   selectizeInstance.settings.load = function(query, callback) {
     if (!query.length || query.length < 3 || !viewModel.username || !viewModel.masterPassword) return callback([]);
     $.ajax({
-      url: 'http://localhost:5000/domains',
+      url: 'http://localhost:5000/command',
       type: 'POST',
       contentType: "application/json",
       data: JSON.stringify({
+        command: 'query-domains',
         query: query,
         username: viewModel.username,
         masterPassword: viewModel.masterPassword
       }),
-      error: function() {
-          callback();
+      error: function(error) {
+        console.warn("Command error", error);
       },
       success: function(res) {
         callback(res.map(function(obj) {
@@ -84,26 +85,25 @@ facade.render = function(viewModel) {
   };
 }
 
+facade.remoteServiceCommand = function(data, callback) {
+  if (!data.command) throw new Error('Invalid command');
+  $.ajax({
+    url: 'http://localhost:5000/command',
+    type: 'POST',
+    contentType: 'application/json',
+    data: JSON.stringify(data),
+    error: function(error) { callback(error, null) },
+    success: function(result) { callback(null, result) }
+  })
+}
 
 facade.putDomainName = function(domainName, username, masterPassword, callback) {
-  $.ajax({
-    url: 'http://localhost:5000/domains',
-    type: 'PUT',
-    contentType: "application/json",
-    data: JSON.stringify({
-      domainName: domainName,
-      username: username,
-      masterPassword: masterPassword
-    }),
-    error: function() {
-      console.warn('Domain Name PUT failed');
-    },
-    success: function(res) {
-    callback(null, res);
-      console.log("Domain Name successfully PUT", res);
-    }
-  });
-
+  facade.remoteServiceCommand({
+    command: 'generate-password',
+    domainName: domainName,
+    username: username,
+    masterPassword: masterPassword
+  }, callback);
 }
 
 var app = App({}, facade)
