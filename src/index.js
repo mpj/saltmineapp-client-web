@@ -22,7 +22,6 @@ var MainView = React.createClass({
   },
   render: function() {
     var viewModel = this.props.viewModel;
-    console.log("React rendering viewModel", viewModel);
 
     return <div>
       <div>
@@ -59,55 +58,73 @@ facade.render = function(viewModel) {
     <MainView viewModel={viewModel} />,
     document.getElementById('mainViewRenderTarget')
   );
-  $('#domain_name').selectize({
-      maxItems: 1,
-      delimiter: ',',
-      persist: false,
-    valueField: 'name',
-        labelField: 'name',
-        searchField: 'name',
-      create: function(input) {
-        console.log('create entered', input);
-        return {
-          value: input,
-          name: input
+  var selectizeInstance = $('#domain_name')[0] && $('#domain_name')[0].selectize;
+  if(!selectizeInstance) {
+    $('#domain_name').selectize({
+        maxItems: 1,
+        delimiter: ',',
+        persist: false,
+      valueField: 'name',
+          labelField: 'name',
+          searchField: 'name',
+        create: function(input) {
+          return {
+            value: input,
+            name: input
+          }
+        },
+        onItemAdd: function(domainName) {
+          app.viewUpdatedDomainName(domainName);
         }
+      })
+  }
+  var selectizeInstance = $('#domain_name')[0] && $('#domain_name')[0].selectize;
+  selectizeInstance.settings.load = function(query, callback) {
+    if (!query.length) return callback();
+    $.ajax({
+      url: 'http://localhost:5000/domains',
+      type: 'POST',
+      contentType: "application/json",
+      data: JSON.stringify({
+        query: query,
+        username: viewModel.username,
+        masterPassword: viewModel.masterPassword
+      }),
+      error: function() {
+          callback();
       },
-      onItemAdd: function(domainName) {
-        app.viewUpdatedDomainName(domainName);
-      },
-      load: function(query, callback) {
-        console.log('load entered', query);
-        if (!query.length) return callback();
-        callback([
-          { name: 'facebook.com', value: 'facebook.com' },
-          { name: 'paypal.com', value: 'paypal.com' }
-        ])
-        /*$.ajax({
-            url: 'https://api.github.com/legacy/repos/search/' + encodeURIComponent(query),
-            type: 'GET',
-            error: function() {
-                callback();
-            },
-            success: function(res) {
-                callback(res.repositories.slice(0, 10));
-            }
-        });*/
+      success: function(res) {
+        callback(res.map(function(obj) {
+          return {
+            name: obj.domainName,
+            value: obj.domainName
+          }
+        }))
       }
+    });
+  };
+}
+
+
+facade.putDomainName = function(domainName, username, masterPassword) {
+  $.ajax({
+    url: 'http://localhost:5000/domains',
+    type: 'PUT',
+    contentType: "application/json",
+    data: JSON.stringify({
+      domainName: domainName,
+      username: username,
+      masterPassword: masterPassword
+    }),
+    error: function() {
+      console.warn('Domain Name PUT failed');
+    },
+    success: function(res) {
+      console.log("Domain Name successfully PUT", res);
+    }
   });
+
 }
 
-var Firebase = require('firebase');
-
-facade.insertDomainName = function(domainName) {
-  var myRootRef = new Firebase('https://saltmineapp.firebaseio.com/mpj/state');
-  myRootRef.set({ dn: domainName });
-}
-
-facade.hash = function(str) {
-  var hash = crypto.createHash('sha1');
-  hash.update(str, 'utf8');
-  return hash.digest('base64');
-}
 var app = App({}, facade)
 app.init();

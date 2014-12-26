@@ -9,15 +9,12 @@ function app(opts, facade) {
       username: ''
     }
   }
-  function storeHash() {
-    return facade.hash(state.view.masterPassword+state.view.username)
-  }
 
-  function render() {
+   function render() {
     facade.render({
-      generatedPasswordValue: facade.hash(state.view.masterPassword+state.view.domainName)
+      username: state.view.username,
+      masterPassword: state.view.masterPassword
     })
-    console.log("storeHash is", storeHash());
   }
   return {
     viewUpdatedMasterPassword: function(masterPassword) {
@@ -30,7 +27,7 @@ function app(opts, facade) {
     },
     viewUpdatedDomainName: function(domainName) {
       state.view.domainName = domainName;
-      facade.insertDomainName(domainName);
+      facade.putDomainName(domainName, state.view.username, state.view.masterPassword);
       render();
     },
     init: function() {
