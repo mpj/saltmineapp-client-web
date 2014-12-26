@@ -53,22 +53,9 @@ facade.render = function(viewModel) {
   var selectizeInstance = $('#domain_name')[0] && $('#domain_name')[0].selectize;
   if(!selectizeInstance) {
     $('#domain_name').selectize({
-        maxItems: 1,
-        delimiter: ',',
-        persist: false,
-      valueField: 'name',
-          labelField: 'name',
-          searchField: 'name',
-        create: function(input) {
-          return {
-            value: input,
-            name: input
-          }
-        },
-        onItemAdd: function(domainName) {
-          app.viewUpdatedDomainName(domainName);
-        }
-      })
+      maxItems: 1,
+      onItemAdd: app.viewUpdatedDomainName
+    })
   }
   var selectizeInstance = $('#domain_name')[0] && $('#domain_name')[0].selectize;
   selectizeInstance.settings.load = function(query, callback) {
@@ -88,7 +75,7 @@ facade.render = function(viewModel) {
       success: function(res) {
         callback(res.map(function(obj) {
           return {
-            name: obj.domainName,
+            text: obj.domainName,
             value: obj.domainName
           }
         }))
