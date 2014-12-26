@@ -6,12 +6,14 @@ function app(opts, facade) {
     view: {
       masterPassword: '',
       domainName: '',
-      username: ''
+      username: '',
+      generatedPassword: ''
     }
   }
 
    function render() {
     facade.render({
+      generatedPasswordValue: state.view.generatedPassword,
       username: state.view.username,
       masterPassword: state.view.masterPassword
     })
@@ -27,7 +29,10 @@ function app(opts, facade) {
     },
     viewUpdatedDomainName: function(domainName) {
       state.view.domainName = domainName;
-      facade.putDomainName(domainName, state.view.username, state.view.masterPassword);
+      facade.putDomainName(domainName, state.view.username, state.view.masterPassword, function(error, result) {
+        state.view.generatedPassword = result.generatedPassword;
+        render();
+      });
       render();
     },
     init: function() {

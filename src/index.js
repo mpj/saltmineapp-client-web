@@ -30,7 +30,7 @@ var MainView = React.createClass({
       </div>
       <div>
           <label htmlFor="master_password">Password</label>
-          <input id="master_password" onKeyUp={this.handleMasterPasswordKeyUp}></input>
+          <input id="master_password" type="password" onKeyUp={this.handleMasterPasswordKeyUp}></input>
       </div>
       <div>
           <label htmlFor="domain_name">Domain/App name</label>
@@ -106,7 +106,7 @@ facade.render = function(viewModel) {
 }
 
 
-facade.putDomainName = function(domainName, username, masterPassword) {
+facade.putDomainName = function(domainName, username, masterPassword, callback) {
   $.ajax({
     url: 'http://localhost:5000/domains',
     type: 'PUT',
@@ -120,6 +120,7 @@ facade.putDomainName = function(domainName, username, masterPassword) {
       console.warn('Domain Name PUT failed');
     },
     success: function(res) {
+    callback(null, res);
       console.log("Domain Name successfully PUT", res);
     }
   });
