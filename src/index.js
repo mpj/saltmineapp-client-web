@@ -37,14 +37,6 @@ var MainView = React.createClass({
           <input id="domain_name"></input>
       </div>
       <div>
-          <input id="allow_special_characters" type="checkbox"></input>
-          <label htmlFor="allow_special_characters">Allow special characters</label>
-      </div>
-      <div>
-          <input id="max_length" maxLength="2"></input>
-          <label htmlFor="max_length">Max length</label>
-      </div>
-      <div>
         <label htmlFor="generated_password">Generated password</label>
         <input id="generated_password" value={viewModel.generatedPasswordValue} readOnly></input>
       </div>
