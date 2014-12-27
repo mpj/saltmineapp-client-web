@@ -72,14 +72,5 @@ facade.remoteServiceCommand = function(data, callback) {
   })
 }
 
-facade.putDomainName = function(domainName, username, masterPassword, callback) {
-  facade.remoteServiceCommand({
-    command: 'generate-password',
-    domainName: domainName,
-    username: username,
-    masterPassword: masterPassword
-  }, callback);
-}
-
 var app = App({}, facade)
 app.init();

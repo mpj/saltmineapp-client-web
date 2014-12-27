@@ -27,7 +27,12 @@ function app(opts, facade) {
     },
     viewUpdatedDomainName: function(domainName) {
       state.view.domainName = domainName;
-      facade.putDomainName(domainName, state.view.username, state.view.masterPassword, function(error, result) {
+      facade.remoteServiceCommand({
+        command: 'generate-password',
+        domainName: domainName,
+        username: state.view.username,
+        masterPassword: state.view.masterPassword
+      }, function(error, result) {
         state.view.generatedPassword = result.generatedPassword;
         render();
       });
