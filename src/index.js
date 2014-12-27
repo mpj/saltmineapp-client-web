@@ -22,17 +22,25 @@ var MainView = React.createClass({
   handleUsernameKeyUp: function(event) {
     app.viewUpdatedUsername(event.target.value)
   },
+  componentDidMount: function() {
+    var username = this.refs.username;
+    if (!username.state.initialValue) {
+      username.getDOMNode().focus();
+    } else {
+      this.refs.masterPassword.getDOMNode().focus();
+    }
+  },
   render: function() {
     var viewModel = this.props.viewModel;
 
     return <div>
       <div>
           <label htmlFor="username">Username</label>
-          <input id="username" type="text" onKeyUp={this.handleUsernameKeyUp} defaultValue={viewModel.username}></input>
+          <input id="username" ref="username" type="text" onKeyUp={this.handleUsernameKeyUp} defaultValue={viewModel.username}></input>
       </div>
       <div>
           <label htmlFor="master_password">Password</label>
-          <input id="master_password" type="password" onKeyUp={this.handleMasterPasswordKeyUp}></input>
+          <input id="master_password" ref="masterPassword" type="password" onKeyUp={this.handleMasterPasswordKeyUp}></input>
       </div>
       <div>
           <label htmlFor="domain_name">Domain/App name</label>
