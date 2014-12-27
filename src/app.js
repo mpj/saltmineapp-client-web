@@ -12,7 +12,8 @@ function app(opts, facade) {
   }
 
    function render() {
-    facade.render({
+     facade.render({
+      username: state.view.username,
       generatedPasswordValue: state.view.generatedPassword
     })
   }
@@ -22,6 +23,7 @@ function app(opts, facade) {
       render();
     },
     viewUpdatedUsername: function(username) {
+      facade.store('username', username);
       state.view.username = username;
       render();
     },
@@ -59,6 +61,7 @@ function app(opts, facade) {
       })
     },
     init: function() {
+      state.view.username = facade.store('username');
       render();
     }
   }

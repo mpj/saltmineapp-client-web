@@ -3,8 +3,11 @@ typeof window !== "undefined" && (window.React = React)
 
 var App = require('./app');
 var crypto = require('crypto');
+var store = require('store2');
 
 var facade = {}
+
+facade.store = store;
 
 var MainView = React.createClass({
   propTypes: {
@@ -25,7 +28,7 @@ var MainView = React.createClass({
     return <div>
       <div>
           <label htmlFor="username">Username</label>
-          <input id="username" type="text" onKeyUp={this.handleUsernameKeyUp}></input>
+          <input id="username" type="text" onKeyUp={this.handleUsernameKeyUp} defaultValue={viewModel.username}></input>
       </div>
       <div>
           <label htmlFor="master_password">Password</label>
