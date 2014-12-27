@@ -35,14 +35,23 @@ function app(opts, facade) {
     },
     viewQueriedDomains: function(query, callback) {
       if (!query.length || query.length < 3 || !state.view.username || !state.view.masterPassword) return callback([]);
-      facade.queryDomains(query, state.view.username, state.view.masterPassword, function(error, result) {
+      facade.remoteServiceCommand({
+        command: 'query-domains',
+        query: query,
+        username: state.view.username,
+        masterPassword: state.view.masterPassword
+      }, function(error, result) {
         if (error) {
-          console.warn(error);
+          console.warn("query-domains error:", error);
         } else {
-          callback(result);
+          callback(result.map(function(obj) {
+            return {
+              text: obj.domainName,
+              value: obj.domainName
+            }
+          }))
         }
-      });
-
+      })
     },
     init: function() {
       render();

@@ -72,26 +72,6 @@ facade.remoteServiceCommand = function(data, callback) {
   })
 }
 
-facade.queryDomains = function(query, username, masterPassword, callback) {
-  facade.remoteServiceCommand({
-    command: 'query-domains',
-    query: query,
-    username: username,
-    masterPassword: masterPassword
-  }, function(error, result) {
-    if (error) {
-      callback(error);
-    } else {
-      callback(null, result.map(function(obj) {
-        return {
-          text: obj.domainName,
-          value: obj.domainName
-        }
-      }))
-    }
-  })
-}
-
 facade.putDomainName = function(domainName, username, masterPassword, callback) {
   facade.remoteServiceCommand({
     command: 'generate-password',
