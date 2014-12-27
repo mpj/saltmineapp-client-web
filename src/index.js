@@ -36,19 +36,19 @@ var MainView = React.createClass({
     return <div>
       <div>
           <label htmlFor="username">Username</label>
-          <input id="username" ref="username" type="text" onKeyUp={this.handleUsernameKeyUp} defaultValue={viewModel.username}></input>
+          <input className="form-control" id="username" ref="username" type="text" onKeyUp={this.handleUsernameKeyUp} defaultValue={viewModel.username}></input>
       </div>
       <div>
-          <label htmlFor="master_password">Password</label>
-          <input id="master_password" ref="masterPassword" type="password" onKeyUp={this.handleMasterPasswordKeyUp}></input>
+          <label htmlFor="master_password">Master password</label>
+          <input className="form-control" id="master_password" ref="masterPassword" type="password" onKeyUp={this.handleMasterPasswordKeyUp}></input>
       </div>
       <div>
           <label htmlFor="domain_name">Domain/App name</label>
-          <input id="domain_name"></input>
+          <input className="form-control" id="domain_name"></input>
       </div>
       <div>
         <label htmlFor="generated_password">Generated password</label>
-        <input id="generated_password" value={viewModel.generatedPasswordValue} readOnly></input>
+        <input className="form-control" id="generated_password" value={viewModel.generatedPasswordValue} readOnly></input>
       </div>
     </div>
   }
