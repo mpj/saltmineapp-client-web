@@ -8,12 +8,14 @@ function app(opts, facade) {
       domainName: '',
       username: '',
       generatedPassword: ''
-    }
+    },
+    justGeneratedPassword: false
   }
 
    function render() {
      facade.render({
       username: state.view.username,
+      generatedPasswordFocus: state.justGeneratedPassword,
       generatedPasswordValue: state.view.generatedPassword
     })
   }
@@ -36,6 +38,7 @@ function app(opts, facade) {
         masterPassword: state.view.masterPassword
       }, function(error, result) {
         state.view.generatedPassword = result.generatedPassword;
+        state.justGeneratedPassword = true;
         render();
       });
       render();

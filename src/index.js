@@ -30,6 +30,11 @@ var MainView = React.createClass({
       this.refs.masterPassword.getDOMNode().focus();
     }
   },
+  componentDidUpdate: function() {
+    var viewModel = this.props.viewModel;
+    if (viewModel.generatedPasswordFocus)
+      $(this.refs.generatedPassword.getDOMNode()).focus().select();
+  },
   render: function() {
     var viewModel = this.props.viewModel;
 
@@ -48,7 +53,7 @@ var MainView = React.createClass({
       </div>
       <div>
         <label htmlFor="generated_password">Generated password</label>
-        <input className="form-control" id="generated_password" value={viewModel.generatedPasswordValue} readOnly></input>
+        <input className="form-control" id="generated_password" ref="generatedPassword" value={viewModel.generatedPasswordValue} readOnly></input>
       </div>
     </div>
   }
