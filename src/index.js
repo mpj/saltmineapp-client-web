@@ -53,7 +53,9 @@ facade.render = function(viewModel) {
   if(!selectizeInstance) {
     $('#domain_name').selectize({
       maxItems: 1,
-      onItemAdd: app.viewUpdatedDomainName
+      onItemAdd: app.viewUpdatedDomainName,
+      persist: true,
+      create: function(value) { return { text: value, value: value } }
     })
   }
   var selectizeInstance = $('#domain_name')[0] && $('#domain_name')[0].selectize;
