@@ -80,8 +80,10 @@ facade.render = function(viewModel) {
 
 facade.remoteServiceCommand = function(data, callback) {
   if (!data.command) throw new Error('Invalid command');
+  var backendUriRoot = window.devmode ? 'http://localhost:5000' :
+    'https://saltmineapp-server-staging.herokuapp.com';
   $.ajax({
-    url: 'http://localhost:5000/command',
+    url: backendUriRoot + '/command',
     type: 'POST',
     contentType: 'application/json',
     data: JSON.stringify(data),
