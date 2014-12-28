@@ -21,10 +21,10 @@
     "mout": "~0.11.0",
     "firebase": "~2.0.6",
     "store2": "~2.1.6",
-    "express": "~4.10.6"
+    "express": "~4.10.6",
+    "react-tools": "~0.12.2"
   },
   "devDependencies": {
-    "react-tools": "~0.12.2",
     "browserify": "~8.0.2"
   }
 }
